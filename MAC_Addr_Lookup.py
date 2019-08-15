@@ -9,9 +9,8 @@ if len(sys.argv) < 2:
 
 addr = sys.argv[1]
 
-# payload = {'search': '44:38:39:ff:ef:57'}
-# formatted string of URL for request with MAC address
-url = f'https://api.macaddress.io/v1?apiKey=at_dgUtmV9XwuiO9hs4JqsU6tzctGMbN&output=json&search={addr}'
+# Formatted string of URL for request with MAC address
+url = 'https://api.macaddress.io/v1?apiKey=at_dgUtmV9XwuiO9hs4JqsU6tzctGMbN&output=json&search=%s' % (addr)
 
 response = requests.get(url)
 
@@ -23,4 +22,4 @@ response.raise_for_status()
 result = json.loads(response.text)
 vendor_details = result['vendorDetails']
 
-print('Requested company name: ' + vendor_details['companyName'])
+print('Company name: ' + vendor_details['companyName'])
