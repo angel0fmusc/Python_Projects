@@ -1,5 +1,0 @@
-FROM python:3
-MAINTAINER Victoria Rivas
-ADD MAC_Addr_Lookup.py /
-RUN pip install requests
-CMD [ "python", "./MAC_Addr_Lookup.py" ]
