@@ -1,0 +1,51 @@
+'''
+Blackjack game
+'''
+
+import random
+
+# Global variables
+suits = ('Hearts', 'Spades', 'Diamonds', 'Clubs')
+ranks = ('Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten', 'Jack', 'Queen', 'King', 'Ace')
+values = {'Two': 2, 'Three': 3, 'Four': 4, 'Five': 5, 'Six': 6, 'Seven': 7, 'Eight': 8, 'Nine': 9, 'Ten': 10, 'Jack': 10,
+         'Queen': 10, 'King': 10, 'Ace': 11}
+
+
+
+class Card:
+
+    def __init__(self, suit, rank):
+        self.suit = suit
+        self.rank = rank
+
+    def __str__(self):
+        return f"{self.rank} of {self.suit}"
+
+
+class Deck:
+
+    def __init__(self):
+        '''
+        Constructor
+        Start with an empty list
+        Loop through the suits tuple, loop through the ranks tuple, and create a Card object from each suit and rank
+        Append the Card object to the list
+        '''
+        self.deck = []
+        for suit in suits:
+            for rank in ranks:
+                self.deck.append(Card(suit, rank))
+
+    def __str__(self):
+        deck_comp = ''
+        for card in self.deck:
+            deck_comp += '\n' + card.__str__()
+        return f'This deck has: {deck_comp}'
+
+    def shuffle(self):
+        random.shuffle(self.deck)
+
+deck = Deck()
+
+print(deck)
+
