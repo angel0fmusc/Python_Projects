@@ -25,12 +25,12 @@ class Card:
 class Deck:
 
     def __init__(self):
-        '''
+        """
         Constructor
         Start with an empty list
         Loop through the suits tuple, loop through the ranks tuple, and create a Card object from each suit and rank
         Append the Card object to the list
-        '''
+        """
         self.deck = []
         for suit in suits:
             for rank in ranks:
@@ -43,10 +43,10 @@ class Deck:
         return f'This deck has: {deck_comp}'
 
     def shuffle(self):
-        '''
+        """
         Shuffle the list of Card objects using random library shuffle() method
         :return: Nothing, list shuffles in place
-        '''
+        """
         random.shuffle(self.deck)
 
     def deal(self):
@@ -64,45 +64,127 @@ class Hand:
         hand_comp = ''
         for card in self.cards:
             hand_comp += '\n' + card.__str__()
-        return f'Hand consists of: {hand_comp}\nValue: {self.value}'
+        return hand_comp
 
     def add_card(self, card):
-        '''
+        """
         Add card to current hand
         :param card: object consisting of rank and suit
         :return:
-        '''
+        """
         self.cards.append(card)
 
         # Get the value of the card by the rank and add to current value
-        self.value += values.get(card.rank)
+        self.value += values[card.rank]
 
         # Increment the number of Aces in hand if card is an Ace
         if card.rank == 'Ace':
             self.aces += 1
 
-        # Check if value needs to be adjusted
-        self.ace_adjust()
-
     def ace_adjust(self):
-        '''
+        """
         If hand consist of Aces, need to determine if more valuable for value of 1 or 11
         :return:
-        '''
+        """
         if self.value > 21 and self.aces != 0:
             self.value -= 10        # Subtract 10 from the value
             self.aces -= 1          # Subtract the number of aces to account for adjustment
 
-    def value_check(self):
-        print(f"Current value: {self.value}")
+
+class Player:
+
+    def __init__(self):
+        self.hand = Hand()
+        self.total = 100
+        self.bet = 0
+
+    def win_bet(self):
+        self.total += self.bet * 2
+
+    def lose_bet(self):
+        self.total -= self.bet
+
+    def place_bet(self):
+        """
+        Ask player for bet.
+        Player's bet must be a number and cannot exceed number of chips.
+        :return: None
+        """
+
+        while True:
+            try:
+                self.bet = int(input("Place your bet: "))
+            except ValueError:
+                print("You did not enter a number.")
+            else:
+                if self.bet > self.total:
+                    print(f"Your bet cannot exceed {self.total}.")
+                else:
+                    break
+
+    def hit(self, deck):
+        """
+        Player requests another card from the dealer.
+        Check if the value of the hand needs to be adjusted due to an Ace
+        :param deck: instance of a Deck containing Card objects
+        :return: None
+        """
+        self.hand.add_card(deck.deal())
+
+        # Check if value needs to be adjusted
+        self.hand.ace_adjust()
+
+
+def hit_or_stay(deck, player):
+    """
+    Current player determines to hit or stay
+    :param deck: Deck object of Card objects
+    :param player: Player object
+    :return: None
+    """
+    global playing
+
+    while True:
+        choice = input("Would you like to hit or stay? Enter h or s: ")
+        # Player chooses to hit
+        if choice[0].lower() == 'h':
+            player.hit(deck)
+        # Player chooses to stay
+        elif choice[0].lower() == 's':
+            print("Player stays. Dealer's turn.")
+            playing = False
+        # Player did not choose either
+        else:
+            print("Please choose again.")
+            continue
+        break
+
+
+def show_hands_some(dealer, player):
+    '''
+    Dealer should have 2 cards. This fuction only shows one of the
+    Dealer's cards and all of the Player's cards.
+    :param dealer: has a hand of Card objects
+    :param player:
+    :return:
+    '''
+    # Show the dealer's first card
+    print(f"Dealer:\n{dealer.hand.cards[0]}")
+
+    # Show all of player's hand
+    print(f"Player:{player.hand}")
+
 
 deck = Deck()
 
 deck.shuffle()
 
-hand = Hand()
+player1 = Player()
+dealer = Player()
+dealer.hit(deck)
+dealer.hit(deck)
+player1.hit(deck)
+player1.hit(deck)
+show_hands_some(dealer, player1)
 
-while hand.value <= 21:
-    hand.add_card(deck.deal())
-    print(hand)
 
