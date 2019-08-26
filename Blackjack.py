@@ -175,16 +175,62 @@ def show_hands_some(dealer, player):
     print(f"Player:{player.hand}")
 
 
-deck = Deck()
+def show_hands_all(dealer, player):
+    """
+    Dealer and player each show all cards
+    :param dealer: has a Hand of Card objects
+    :param player:
+    :return:
+    """
+    # Show dealer's hand and value
+    print(f"Dealer:{dealer.hand}\nValue: {dealer.hand.value}")
 
-deck.shuffle()
-
-player1 = Player()
-dealer = Player()
-dealer.hit(deck)
-dealer.hit(deck)
-player1.hit(deck)
-player1.hit(deck)
-show_hands_some(dealer, player1)
+    # Show player's hand and value
+    print(f"Player:{player.hand}\nValue: {player.hand.value}")
 
 
+def player_wins(player):
+    """
+    Player wins in one of 3 ways:
+        - Hand gets 21 points on first two cards (blackjack) without dealer blackjack
+        - Final score higher than dealer without exceeding 21
+        - Dealer busts
+    :param player: Object, had a hand of Card objects
+    :return:
+    """
+    return player.hand.value == 21 or player.hand.value < 21
+
+
+def player_busts(player):
+    """
+    Player hand > 21
+    :return: Boolean
+    """
+    return player.hand.value > 21
+
+
+# Gameplay
+if __name__ == "__main__":
+
+    # Create a deck of cards and shuffle
+    deck = Deck()
+    deck.shuffle()
+
+    # Create players
+    player1 = Player()
+    dealer = Player()
+
+    # Have player place bet
+    player1.place_bet()
+
+    # Deal 2 cards each to dealer and player
+    dealer.hit(deck)
+    dealer.hit(deck)
+    player1.hit(deck)
+    player1.hit(deck)
+
+    # Show initial hand
+    show_hands_some(dealer, player1)
+
+    while playing:
+        pass
