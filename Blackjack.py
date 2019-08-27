@@ -209,6 +209,26 @@ def player_busts(player):
     return player.hand.value > 21
 
 
+def dealer_wins(dealer):
+    """
+    Dealer wins if:
+    - hand == 21
+    - greater than player's hand, but less than 21
+    :param dealer:
+    :return:
+    """
+    pass
+
+
+def dealer_busts(dealer):
+    """
+    Dealer busts if hand exceeds 21
+    :param dealer: object with Hand of Card objects
+    :return: Boolean
+    """
+    return dealer.hand.value > 21
+
+
 # Gameplay
 if __name__ == "__main__":
 
