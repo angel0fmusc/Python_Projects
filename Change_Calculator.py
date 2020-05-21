@@ -1,11 +1,10 @@
 import math
-from pprint import pprint
 
 coins = {
     "quarter": 25,
     "dime": 10,
     "nickel": 5,
-    "penny":1
+    "penny": 1
 }
 
 cost = float(input("Enter a cost: $"))
@@ -13,7 +12,7 @@ cost = float(input("Enter a cost: $"))
 while True:
     try:
         money_given = float(input("Enter the amount of money given: $"))
-    except:
+    except ValueError:
         # not given a float or integer
         print(f"Enter an integer or float\n")
     else:
@@ -21,9 +20,6 @@ while True:
             print("Please provide more money to calculate change.\n")
         else:
             break
-
-# money_given = int(money_given*100)
-# cost = int(cost*100)
 
 # Calculate the difference
 difference = money_given-cost
@@ -43,8 +39,8 @@ else:
     change_in_coins = {}
 
     for currency in coins:
-        quotient,remainder = divmod(change,coins[currency])
-        change_in_coins[currency] = quotient # number of coins
+        quotient, remainder = divmod(change, coins[currency])
+        change_in_coins[currency] = quotient  # number of coins
         change = remainder
 
     print(f"${bills} in bills\n{change_in_coins['quarter']} quarters\n{change_in_coins['dime']} dimes"
