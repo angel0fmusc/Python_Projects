@@ -14,15 +14,16 @@ vowel_regex = re.compile(r'[aeiou]')
 word = input("Enter a word:").strip().lower()
 
 # Locate the first instance of a vowel
-vowel_search = vowel_regex.search(word)
-print(vowel_search.start())
+vowel_search = vowel_regex.search(word)     # Match object; contains the matched vowel
 
-# Split the string at that first instance, but retain the vowel
+# Split the string at that first instance, but retain the vowel using partition
 partition_list = word.partition(vowel_search.group())
-print(partition_list)
+beginning, middle, end = partition_list     # unpack tuple
 
-# Append "-ay" to the first half of the string
-end = partition_list[0] + "ay"
-print(end)
+# Create pig latin word from pieces of the partitioned word
+pig_latin_end = beginning + "ay"
+pig_latin_beginning = middle + end + "-"
+pig_latin_word = pig_latin_beginning + pig_latin_end
 
+print(pig_latin_word)
 
