@@ -1,47 +1,97 @@
+"""
+Change Calculator
+Given the cost of an item and the amount given, calculate the change to return to the user
+and the number of specific coins (quarter, dime, nickel, and penny) to return.
+"""
+
 import math
 
-coins = {
-    "quarter": 25,
-    "dime": 10,
-    "nickel": 5,
-    "penny": 1
-}
 
-cost = float(input("Enter a cost: $"))
+class ChangeCalc:
+    def __init__(self):
+        self.coins = {
+            "quarter": 25,
+            "dime": 10,
+            "nickel": 5,
+            "penny": 1
+            }
+        self.cost = 0
+        self.money_given = 0
+        self.change = None
+        self.bills = None
 
-while True:
-    try:
-        money_given = float(input("Enter the amount of money given: $"))
-    except ValueError:
-        # not given a float or integer
-        print(f"Enter an integer or float\n")
-    else:
-        if money_given < cost:
-            print("Please provide more money to calculate change.\n")
+    def get_cost(self):
+        """
+        Ask user for input and confirm if user inputs an integer or float.
+        Otherwise, continue to ask for input
+        :return: None
+        """
+        while True:
+            try:
+                self.cost += float(input("Enter a cost: $"))
+                break
+            except ValueError:
+                print("That was not a valid number. Try again...")
+
+    def money_for_item(self):
+        """
+        Ask user for input of either integer or float.
+        If correct input received, but amount is less than the cost, add the amount until both the cost
+        and money given are equal.
+        :return: None
+        """
+        while True:
+            try:
+                self.money_given += float(input("Enter the amount of money given: $"))
+                if self.money_given < self.cost:
+                    print("Please provide more money to calculate change.\n"
+                          f"Current cost of item: ${self.cost}\n"
+                          f"Current amount given: ${round(self.money_given,2)}\n")
+                else:
+                    break
+            except ValueError:
+                print("That was not a valid number. Try again...")
+
+    def difference_in_cost(self):
+        """
+        Calculate the difference in the cost and amount given
+        :return: None
+        """
+        difference = self.money_given - self.cost
+        print(f"Your change is ${round(difference, 2)}")
+
+        # Separate the bills from the change
+        self.change, self.bills = math.modf(difference)
+
+        # Round the current change to 2 decimal points
+        self.change = round(self.change, 2)
+        self.coins_for_change()
+
+    # Step 4: Determine the number of coins needed for change
+    def coins_for_change(self):
+        """
+        Determine the number of coins needed to give back change.
+        Print the number of coins that are being returned as change
+        :return: None
+        """
+        if self.bills == 0 and self.change == 0:
+            print("You gave exact change. Nothing to return.")
         else:
-            break
+            # Work with the change as an int
+            change = int(self.change*100)
+            change_in_coins = {}
 
-# Calculate the difference
-difference = money_given-cost
+            # Loop through dictionary of coin values and divide into change to return
+            for currency in self.coins:
+                quotient, remainder = divmod(change, self.coins[currency])
+                change_in_coins[currency] = quotient    # Add number of coins to new dictionary
+                change = remainder                      # Remaining coins to calculate change
 
-# Separate the dollar bills from the change to be calculated
-change, bills = math.modf(difference)
-change = round(change, 2)
+            print(f"${self.bills} in bills\n{change_in_coins['quarter']} quarters\n{change_in_coins['dime']} dimes"
+                  f"\n{change_in_coins['nickel']} nickels\nand {change_in_coins['penny']} pennies")
 
-if change == 0 and bills == 0:
-    print("You gave exact change. Nothing to return.")
 
-else:
-    print(f"Your change is ${round(difference,2)}")
-    # Work with change as an integer
-    change = int(change*100)
-
-    change_in_coins = {}
-
-    for currency in coins:
-        quotient, remainder = divmod(change, coins[currency])
-        change_in_coins[currency] = quotient  # number of coins
-        change = remainder
-
-    print(f"${bills} in bills\n{change_in_coins['quarter']} quarters\n{change_in_coins['dime']} dimes"
-          f"\n{change_in_coins['nickel']} nickels\nand {change_in_coins['penny']} pennies")
+my_change = ChangeCalc()
+my_change.get_cost()
+my_change.money_for_item()
+my_change.difference_in_cost()
