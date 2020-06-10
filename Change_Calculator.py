@@ -9,12 +9,7 @@ import math
 
 class ChangeCalc:
     def __init__(self):
-        self.coins = {
-            "quarter": 25,
-            "dime": 10,
-            "nickel": 5,
-            "penny": 1
-            }
+        self.change_in_coins = {}
         self.cost = 0
         self.money_given = 0
         self.change = None
@@ -67,7 +62,6 @@ class ChangeCalc:
         self.change = round(self.change, 2)
         self.coins_for_change()
 
-    # Step 4: Determine the number of coins needed for change
     def coins_for_change(self):
         """
         Determine the number of coins needed to give back change.
@@ -77,18 +71,30 @@ class ChangeCalc:
         if self.bills == 0 and self.change == 0:
             print("You gave exact change. Nothing to return.")
         else:
+            coins = {
+                "quarter": 25,
+                "dime": 10,
+                "nickel": 5,
+                "penny": 1
+            }
             # Work with the change as an int
             change = int(self.change*100)
-            change_in_coins = {}
 
             # Loop through dictionary of coin values and divide into change to return
-            for currency in self.coins:
-                quotient, remainder = divmod(change, self.coins[currency])
-                change_in_coins[currency] = quotient    # Add number of coins to new dictionary
+            for currency in coins:
+                quotient, remainder = divmod(change, coins[currency])
+                self.change_in_coins[currency] = quotient    # Add number of coins to new dictionary
                 change = remainder                      # Remaining coins to calculate change
 
-            print(f"${self.bills} in bills\n{change_in_coins['quarter']} quarters\n{change_in_coins['dime']} dimes"
-                  f"\n{change_in_coins['nickel']} nickels\nand {change_in_coins['penny']} pennies")
+            print(f"${self.bills} in bills")
+            for num_change in self.change_in_coins:
+                if self.change_in_coins[num_change] != 0:
+                    if self.change_in_coins[num_change] == 1:
+                        print(f"{self.change_in_coins[num_change]} {num_change}")
+                    elif self.change_in_coins[num_change] > 1 and num_change == "penny":
+                        print(f"{self.change_in_coins[num_change]} pennies")
+                    else:
+                        print(f"{self.change_in_coins[num_change]} {num_change}s")
 
 
 my_change = ChangeCalc()
