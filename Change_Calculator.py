@@ -9,7 +9,7 @@ import math
 
 class ChangeCalc:
     def __init__(self):
-        self.change_in_coins = {}
+        self.complete_change = {}
         self.cost = 0
         self.money_given = 0
         self.change = None
@@ -60,41 +60,74 @@ class ChangeCalc:
 
         # Round the current change to 2 decimal points
         self.change = round(self.change, 2)
-        self.coins_for_change()
-
-    def coins_for_change(self):
-        """
-        Determine the number of coins needed to give back change.
-        Print the number of coins that are being returned as change
-        :return: None
-        """
         if self.bills == 0 and self.change == 0:
             print("You gave exact change. Nothing to return.")
         else:
-            coins = {
-                "quarter": 25,
-                "dime": 10,
-                "nickel": 5,
-                "penny": 1
-            }
-            # Work with the change as an int
-            change = int(self.change*100)
+            self.bills_coins_change("bills")
+            self.bills_coins_change("coins")
+            self.print_money()
 
-            # Loop through dictionary of coin values and divide into change to return
-            for currency in coins:
-                quotient, remainder = divmod(change, coins[currency])
-                self.change_in_coins[currency] = quotient    # Add number of coins to new dictionary
-                change = remainder                      # Remaining coins to calculate change
+    def bills_coins_change(self, flag):
+        """
+        Determine the least amount of change to give back in bills and coins.
+        Flag will determine what dictionary to create and how the change will be divided
+        :param flag: string, either 'bills' or 'coins'
+        :return: None
+        """
+        if flag == "bills":
+            # If there is no dollars to return, exit the function
+            if self.bills == 0:
+                print("No bills to return")
+                return
+            # Otherwise, create a dictionary and variable for bills as ints
+            else:
+                change = {
+                    "one-hundred": 100,
+                    "fifty": 50,
+                    "twenty": 20,
+                    "ten": 10,
+                    "five": 5,
+                    "one": 1
+                }
+                money = int(self.bills)
+                # print(f"${self.bills} in bills")
 
-            print(f"${self.bills} in bills")
-            for num_change in self.change_in_coins:
-                if self.change_in_coins[num_change] != 0:
-                    if self.change_in_coins[num_change] == 1:
-                        print(f"{self.change_in_coins[num_change]} {num_change}")
-                    elif self.change_in_coins[num_change] > 1 and num_change == "penny":
-                        print(f"{self.change_in_coins[num_change]} pennies")
-                    else:
-                        print(f"{self.change_in_coins[num_change]} {num_change}s")
+        # flag is coins
+        else:
+            # If there is no coins, exit the function
+            if self.change == 0:
+                print("No coins to return")
+                return
+            else:
+                change = {
+                    "quarter": 25,
+                    "dime": 10,
+                    "nickel": 5,
+                    "penny": 1
+                }
+                money = int(self.change*100)
+                # print(f"${self.change} in coins")
+
+        # Loop through dictionary and device into change to return
+        for currency in change:
+            quotient, remainder = divmod(money, change[currency])
+            self.complete_change[currency] = quotient   # Add the number of bills/coins to the instance dictionary
+            money = remainder
+
+# TO-DO: Need to adjust for all dict keys that end in 'y'
+    def print_money(self):
+        """
+        Print the change in the instance dictionary
+        :return: None
+        """
+        for money in self.complete_change:
+            if self.complete_change[money] != 0:
+                if self.complete_change[money] == 1:
+                    print(f"{self.complete_change[money]} {money}")
+                elif self.complete_change[money] > 1 and money == "penny":
+                    print(f"{self.complete_change[money]} pennies")
+                else:
+                    print(f"{self.complete_change[money]} {money}s")
 
 
 my_change = ChangeCalc()
